@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     EditText ed1,ed2;
-
+    Client client;
     TextView IP, Port;
 
     @Override
@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                client = new Client();
+                client.connect();
                 Intent intent = new Intent(v.getContext(),SecondActivity.class);
                 startActivity(intent);
                 finish();
