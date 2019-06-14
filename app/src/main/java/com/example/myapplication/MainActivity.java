@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 client = new Client();
-                client.connect();
+                client.getInstance().connect();
                 Intent intent = new Intent(v.getContext(),SecondActivity.class);
                 startActivity(intent);
                 finish();

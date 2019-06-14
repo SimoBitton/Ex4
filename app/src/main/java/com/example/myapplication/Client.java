@@ -10,11 +10,16 @@ public class Client {
     private static Socket clientSocket;
 
 
-    public Client(){
-        if (instance==null){
-            instance = this;
-        }
+    public Client()
+    {
 
+    }
+
+    public static Client getInstance(){
+        if (instance == null)
+            instance = new Client();
+
+        return instance;
     }
 
     public static void connect() {
