@@ -41,10 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 ipAddress  = ed2.getText().toString();
                 portNumber = ed1.getText().toString();
                 new ConnectTask().execute("");
-                if (mTcpClient != null) {
-                    mTcpClient.sendMessage("testing");
-                }
-
                 Intent intent = new Intent(v.getContext(),SecondActivity.class);
                 startActivity(intent);
                 finish();
