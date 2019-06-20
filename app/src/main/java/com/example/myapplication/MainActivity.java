@@ -18,35 +18,36 @@ import java.net.Socket;
 public class MainActivity extends AppCompatActivity {
 
     Button button;
-    EditText ed1,ed2;
-    TcpClient mTcpClient;
+    EditText ed1, ed2;
     TextView IP, Port;
-    String ipAddress;
-    String portNumber;
+    public static String ipAddress;
+    public static String portNumber;
+    public static TcpClient mTcpClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = (Button)findViewById(R.id.button);
-        ed1 = (EditText)findViewById(R.id.editText);
-        ed2 = (EditText)findViewById(R.id.editText2);
-        IP = (TextView)findViewById(R.id.textView);
-        Port = (TextView)findViewById(R.id.textView2);
+        button = (Button) findViewById(R.id.button);
+        ed1 = (EditText) findViewById(R.id.editText);
+        ed2 = (EditText) findViewById(R.id.editText2);
+        IP = (TextView) findViewById(R.id.textView);
+        Port = (TextView) findViewById(R.id.textView2);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ipAddress  = ed2.getText().toString();
+                ipAddress = ed2.getText().toString();
                 portNumber = ed1.getText().toString();
                 new ConnectTask().execute("");
-                Intent intent = new Intent(v.getContext(),SecondActivity.class);
+                Intent intent = new Intent(v.getContext(), SecondActivity.class);
                 startActivity(intent);
                 finish();
-                }
-            });
-        }
+            }
+        });
+    }
 
     public class ConnectTask extends AsyncTask<String, String, TcpClient> {
 
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     publishProgress(message);
                 }
             });
-            mTcpClient.run(ipAddress,portNumber);
+            mTcpClient.run();
 
             return null;
         }
@@ -76,5 +77,4 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-    }
+}

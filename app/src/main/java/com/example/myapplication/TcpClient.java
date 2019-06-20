@@ -12,8 +12,9 @@ import java.net.Socket;
 public class TcpClient {
 
     public static final String TAG = TcpClient.class.getSimpleName();
-    public static final String SERVER_IP = "10.0.2.2"; //server IP address
-    public static final int SERVER_PORT = 1234;
+    public static final String SERVER_IP = MainActivity .ipAddress;
+    public static final int SERVER_PORT = Integer.parseInt(MainActivity.portNumber);
+
     // message to send to the server
     private String mServerMessage;
     // sends message received notifications
@@ -31,7 +32,6 @@ public class TcpClient {
     public TcpClient(OnMessageReceived listener) {
         mMessageListener = listener;
     }
-
     /**
      * Sends the message entered by client to the server
      *
@@ -51,40 +51,25 @@ public class TcpClient {
         Thread thread = new Thread(runnable);
         thread.start();
     }
-
     /**
      * Close the connection and release the members
      */
     public void stopClient() {
 
-        mRun = false;
 
         if (mBufferOut != null) {
             mBufferOut.flush();
             mBufferOut.close();
         }
 
-        mMessageListener = null;
         mBufferIn = null;
         mBufferOut = null;
-        mServerMessage = null;
     }
 
-    public void run(String ip, String port) {
 
+    public void run() {
 
-        Socket socket;
-        try {
-            socket = new Socket( ip, Integer.parseInt(port));
-            PrintWriter writer = new PrintWriter(socket.getOutputStream());
-            writer.print("Hello world");
-            writer.flush();
-            writer.close();
-            socket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-  /*      mRun = true;
+        boolean mRun = true;
 
         try {
             //here you must put your computer's IP address.
@@ -129,7 +114,7 @@ public class TcpClient {
         } catch (Exception e) {
             Log.e("TCP", "C: Error", e);
         }
-*/
+
     }
 
     //Declare the interface. The method messageReceived(String message) will must be implemented in the Activity

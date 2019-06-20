@@ -14,6 +14,7 @@ public class JoyStickView extends View {
     private boolean circleBound;
     private float currentX;
     private float currentY;
+    private TcpClient server = MainActivity.mTcpClient;
 
     public JoyStickView(Context context) {
         super(context);
@@ -43,6 +44,7 @@ public class JoyStickView extends View {
               if (inOuterBounds(event.getX(), event.getY())) {
                     currentX = event.getX();
                     currentY = event.getY();
+                    sendCommands(currentX,currentY);
                     invalidate();
               }
                 return true;
@@ -63,13 +65,13 @@ public class JoyStickView extends View {
     }
 
     private boolean inOuterBounds(float x, float y) {
-        double distanceFromCenter = Math.sqrt((getWidth()/2 - x) * (getWidth()/2 - x) + (getHeight()/2 - y) * (getHeight()/2 - y));
+        double distanceFromCenter = Math.sqrt(2*Math.pow((getWidth()/2 - x),2));
         return (distanceFromCenter <= 260);
 
     }
 
     private boolean InCircle(float x, float y) {
-        double distanceFromCenter = Math.sqrt((getWidth()/2 - x) * (getWidth()/2 - x) + (getHeight()/2 - y) * (getHeight()/2 - y));
+        double distanceFromCenter = Math.sqrt(2*Math.pow((getWidth()/2 - x),2));
         return (distanceFromCenter <= 130);
     }
 
@@ -78,5 +80,19 @@ public class JoyStickView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         currentX = getWidth()/2;
         currentY = getHeight()/2;
+    }
+
+    public void sendCommands(float x, float y){
+        float newX = (x - (this.getWidth() / 2)) / (260);
+        float newY  = (y - (this.getHeight() / 2)) / (260);
+
+            server.sendMessage("set /controls/flight/aileron " + newX);
+            server.sendMessage("set /controls/flight/elevator " + newY);
+
+
+    }
+
+    public void close() {
+        server.stopClient();
     }
 }
