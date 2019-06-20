@@ -4,79 +4,79 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.view.MotionEventCompat;
 
 public class JoyStickView extends View {
     private Paint colors =new Paint();
-    Canvas canvas;
-    private Paint freeCellPaint;
-    private Paint wallPaint;
+    private boolean circleBound;
+    private float currentX;
+    private float currentY;
 
     public JoyStickView(Context context) {
         super(context);
-        freeCellPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        freeCellPaint.setColor(Color.WHITE);
-        freeCellPaint.setStyle(Paint.Style.FILL);
-        wallPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        wallPaint.setColor(Color.BLACK);
-        wallPaint.setStyle(Paint.Style.FILL);
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onDraw(Canvas canvas) {
-        this.canvas=canvas;
         super.onDraw(canvas);
         colors.setColor(Color.GRAY);
-        canvas.drawOval(getWidth()/2 -400,getHeight()/2 + 500, getWidth()/2 + 400,  getHeight()/2 - 500, colors );
+        canvas.drawCircle(getWidth()/2, getHeight()/2, 390, colors);
         colors.setColor(Color.BLACK);
-        canvas.drawCircle(getWidth()/2,getHeight()/2,130, colors);
-
+        canvas.drawCircle(currentX,currentY,130, colors);
     }
+
+    @SuppressWarnings("deprecation")
     public boolean onTouchEvent(MotionEvent event) {
         int action = MotionEventCompat.getActionMasked(event);
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
-                float x = event.getX();
-                float y = event.getY();
-                canvas.drawCircle(x,y,200,colors);
-                break;
+                if(InCircle(event.getX(), event.getY()))
+                    circleBound = true;
+                return true;
             }
             case MotionEvent.ACTION_MOVE: {
 
-                float x = event.getX();
-                float y = event.getY();
-                break;
-
+              if (!circleBound)
+                  return true;
+              if (inOuterBounds(event.getX(), event.getY())) {
+                    currentX = event.getX();
+                    currentY = event.getY();
+                    invalidate();
+              }
+                return true;
             }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                break;
-
+            case MotionEvent.ACTION_UP: {
+                circleBound = false;
+                goToDefaultPosition();
+                invalidate();
+                return true;
+            }
         }
         return true;
     }
 
+    private void goToDefaultPosition() {
+        currentX =  getWidth() / 2;
+        currentY =  getHeight() / 2;
+    }
 
-    private int mazeWidth, mazeHeight;
-    private int cellWidth, cellHeight;
+    private boolean inOuterBounds(float x, float y) {
+        double distanceFromCenter = Math.sqrt((getWidth()/2 - x) * (getWidth()/2 - x) + (getHeight()/2 - y) * (getHeight()/2 - y));
+        return (distanceFromCenter <= 260);
+
+    }
+
+    private boolean InCircle(float x, float y) {
+        double distanceFromCenter = Math.sqrt((getWidth()/2 - x) * (getWidth()/2 - x) + (getHeight()/2 - y) * (getHeight()/2 - y));
+        return (distanceFromCenter <= 130);
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-// Account for padding
-        int xpad = getPaddingLeft() + getPaddingRight();
-        int ypad = getPaddingTop() + getPaddingBottom();
-        mazeWidth = w - xpad;
-        mazeHeight =h - ypad;
-
+        currentX = getWidth()/2;
+        currentY = getHeight()/2;
     }
 }
