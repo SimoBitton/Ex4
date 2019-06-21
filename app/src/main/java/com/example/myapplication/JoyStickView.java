@@ -65,13 +65,13 @@ public class JoyStickView extends View {
     }
 
     private boolean inOuterBounds(float x, float y) {
-        double distanceFromCenter = Math.sqrt(2*Math.pow((getWidth()/2 - x),2));
+        double distanceFromCenter = Math.sqrt(Math.pow((getWidth()/2 - x),2) + Math.pow((getHeight()/2 - y),2));
         return (distanceFromCenter <= 260);
 
     }
 
     private boolean InCircle(float x, float y) {
-        double distanceFromCenter = Math.sqrt(2*Math.pow((getWidth()/2 - x),2));
+        double distanceFromCenter = Math.sqrt(Math.pow((getWidth()/2 - x),2) + Math.pow((getHeight()/2 - y),2));
         return (distanceFromCenter <= 130);
     }
 
