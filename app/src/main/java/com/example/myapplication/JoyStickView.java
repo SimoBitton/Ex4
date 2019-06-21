@@ -23,24 +23,28 @@ public class JoyStickView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         colors.setColor(Color.GRAY);
+        //Draw outer circle
         canvas.drawCircle(getWidth()/2, getHeight()/2, 390, colors);
         colors.setColor(Color.BLACK);
+        //Draw inner circle to be moved
         canvas.drawCircle(currentX,currentY,130, colors);
     }
+
 
     @SuppressWarnings("deprecation")
     public boolean onTouchEvent(MotionEvent event) {
         int action = MotionEventCompat.getActionMasked(event);
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
+                //Means that location is valid and inner circle can be moved
                 if(InCircle(event.getX(), event.getY()))
                     circleBound = true;
                 return true;
             }
             case MotionEvent.ACTION_MOVE: {
-
               if (!circleBound)
                   return true;
+              //Bound inner circle into outer circle
               if (inOuterBounds(event.getX(), event.getY())) {
                     currentX = event.getX();
                     currentY = event.getY();
@@ -51,6 +55,7 @@ public class JoyStickView extends View {
             }
             case MotionEvent.ACTION_UP: {
                 circleBound = false;
+                //Move back to center
                 goToDefaultPosition();
                 invalidate();
                 return true;
@@ -77,19 +82,18 @@ public class JoyStickView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        //Positioned before onDraw is called
         super.onSizeChanged(w, h, oldw, oldh);
         currentX = getWidth()/2;
         currentY = getHeight()/2;
     }
 
     public void sendCommands(float x, float y){
+        //Send normalized joystick values to the server
         float newX = (x - (this.getWidth() / 2)) / (260);
         float newY  = (y - (this.getHeight() / 2)) / (260);
-
-            server.sendMessage("set /controls/flight/aileron " + newX);
-            server.sendMessage("set /controls/flight/elevator " + newY);
-
-
+        server.sendMessage("set /controls/flight/aileron " + newX);
+        server.sendMessage("set /controls/flight/elevator " + newY);
     }
 
     public void close() {

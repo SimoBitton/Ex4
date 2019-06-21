@@ -14,11 +14,9 @@ Main window class - from here the program begins
  */
 public class MainActivity extends AppCompatActivity {
 
-
     /*
     Variables to be bound with elements from view (start activity)
      */
-
     Button button;
     EditText ed1, ed2;
     TextView IP, Port;
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     a static variable to be updated when connection has begun
      */
     public static TcpClient mTcpClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected TcpClient doInBackground(String... message) {
-
             //we create a TCPClient object
             mTcpClient = new TcpClient(new TcpClient.OnMessageReceived() {
                 @Override
@@ -79,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             mTcpClient.run();
-
             return null;
         }
 
@@ -89,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             //response received from server
             Log.d("test", "response " + values[0]);
             //process server response here....
-
         }
     }
 }

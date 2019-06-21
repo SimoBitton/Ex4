@@ -16,7 +16,5 @@ public class SecondActivity extends AppCompatActivity {
     public void onDestroy() {
         joyStickView.close();
         super.onDestroy();
-
     }
-
 }
