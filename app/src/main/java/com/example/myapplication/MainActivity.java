@@ -1,27 +1,38 @@
 package com.example.myapplication;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.PrintWriter;
-import java.net.Socket;
-
+/*
+Main window class - from here the program begins
+ */
 public class MainActivity extends AppCompatActivity {
+
+
+    /*
+    Variables to be bound with elements from view (start activity)
+     */
 
     Button button;
     EditText ed1, ed2;
     TextView IP, Port;
+
+
+   /*
+   Variables to save data from users input in first activity
+    */
     public static String ipAddress;
     public static String portNumber;
+
+    /*
+    a static variable to be updated when connection has begun
+     */
     public static TcpClient mTcpClient;
 
 
@@ -35,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
         ed2 = (EditText) findViewById(R.id.editText2);
         IP = (TextView) findViewById(R.id.textView);
         Port = (TextView) findViewById(R.id.textView2);
-
+        /*
+        code to be executed when "connect" bottom is pressed
+         */
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    /*
+    Async Task to make sure each command will be committed without a NetworkOnMainThreadException
+     */
     public class ConnectTask extends AsyncTask<String, String, TcpClient> {
 
         @Override
